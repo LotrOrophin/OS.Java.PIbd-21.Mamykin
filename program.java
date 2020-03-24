@@ -18,37 +18,33 @@ public class program {
 	}
 	
 	public void start() {
-		sortProcesses();
 		
 		while (!processes.isEmpty()) {
-			int p = processes.get(0).getPriority();
+			int p = findMax();
 			int i = 0;
-			
-			while (i < processes.size() && processes.get(i).getPriority() == p) {
-				int allottedTime = 500;
+			while (i < processes.size()) {
+				p = findMax();				
+				if(processes.get(i).getPriority() == p) {
+					int allottedTime = 500;
+					
+					boolean isProcessClosed = processes.get(i).invoke(allottedTime);
 				
-				boolean isProcessClosed = processes.get(i).invoke(allottedTime);
-				
-				if (isProcessClosed) {
-					processes.remove(i);
-					i--;
+					if (isProcessClosed) {
+						processes.remove(i);
+						i--;
+					}
 				}
-				
-				i++;
+				i++;				
 			}
 		}
 		
 	}
-	
-	private void sortProcesses() {
-		for (int i = 0; i < processes.size() - 1; i++) {
-			for (int j = 0; j < processes.size() - 1; j++) {
-				if (processes.get(j).getPriority() < processes.get(j + 1).getPriority()) {
-					Process temp = processes.get(j);
-					processes.set(j, processes.get(j + 1));
-					processes.set(j + 1, temp);
-				}
-			}
+	private int findMax() {
+		int maxP = 0;
+		for(int j = 0; j < processes.size(); j++) {
+			if(processes.get(j).getPriority() > maxP)
+				maxP = processes.get(j).getPriority();			
 		}
+		return maxP;
 	}
 }

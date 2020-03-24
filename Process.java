@@ -23,7 +23,7 @@ public class Process {
 	}
 	
 	public boolean invoke(int allottedTime) {
-		log("  На выполнении " + name + " с приоритетом " + priority);
+		log("  На выполнении процесс " + name + " с приоритетом " + priority);
 		
 		int sumPiority = 0;
 		for (int i = 0; i < threads.size(); i++) {
