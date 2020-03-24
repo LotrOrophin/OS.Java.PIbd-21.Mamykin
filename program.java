@@ -22,8 +22,10 @@ public class program {
 		while (!processes.isEmpty()) {
 			int p = findMax();
 			int i = 0;
-			while (i < processes.size()) {
-				p = findMax();				
+			while(p >= 0) {
+				
+			
+			while (i < processes.size()) {				
 				if(processes.get(i).getPriority() == p) {
 					int allottedTime = 500;
 					
@@ -36,6 +38,8 @@ public class program {
 				}
 				i++;				
 			}
+			p--;
+			}
 		}
 		
 	}
@@ -46,5 +50,5 @@ public class program {
 				maxP = processes.get(j).getPriority();			
 		}
 		return maxP;
-	}
+	}	
 }
