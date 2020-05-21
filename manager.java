@@ -1,12 +1,12 @@
 
 import java.util.ArrayList;
 
-public class program {
+public class manager {
 	private Timer timer;
 	
 	private ArrayList<Process> processes;
 	
-	public program(Timer timer) {
+	public manager(Timer timer) {
 		this.timer = timer;
 		
 		int processesCount = (int) (Math.random() * 4 + 3);
@@ -21,13 +21,12 @@ public class program {
 		
 		while (!processes.isEmpty()) {
 			int p = findMax();
-			int i = 0;
 			while(p >= 0) {
-				
+				int i =0;
 			
-			while (i < processes.size()) {				
-				if(processes.get(i).getPriority() == p) {
-					int allottedTime = 500;
+				while (i < processes.size()) {				
+					if(processes.get(i).getPriority() == p) {
+						int allottedTime = 500;
 					
 					boolean isProcessClosed = processes.get(i).invoke(allottedTime);
 				
@@ -37,8 +36,8 @@ public class program {
 					}
 				}
 				i++;				
-			}
-			p--;
+				}
+				p--;
 			}
 		}
 		
