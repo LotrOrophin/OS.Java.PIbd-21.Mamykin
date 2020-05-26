@@ -5,7 +5,7 @@ public class MemoryManager {
 	private PagesTable table;
 	private Program process;
 	
-	private int pageSize = 10;
+	private final int pageSize = Page.CONSTANT_PageSize;
 	
 	public MemoryManager(Memory HDD, Memory RAM, int programSize) {
 		this.HDD = HDD;
@@ -13,7 +13,7 @@ public class MemoryManager {
 
 		process = new Program(programSize);
 		table = new PagesTable(HDD.getSize() / pageSize + 1, RAM.getSize() / pageSize + 1);
-		
+
 		table.nextCicle();
 	}
 	

@@ -5,7 +5,7 @@ public class Memory {
 	public Memory(int size, boolean isClear) {
 		this.size = size;
 
-		int pagesCount = size / 10 + 1;
+		int pagesCount = size / Page.CONSTANT_PageSize + 1;
 		pages = new Page[pagesCount];
 		for (int i = 0; i < pagesCount; i++) {
 			int pageNumber = isClear? -1 : i;
