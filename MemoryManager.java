@@ -5,12 +5,11 @@ public class MemoryManager {
 	private PagesTable table;
 	private Program process;
 	
-	private int pageSize;
+	private int pageSize = 10;
 	
-	public MemoryManager(Memory HDD, Memory RAM, int pageSize, int programSize) {
+	public MemoryManager(Memory HDD, Memory RAM, int programSize) {
 		this.HDD = HDD;
 		this.RAM = RAM;
-		this.pageSize = pageSize;
 
 		process = new Program(programSize);
 		table = new PagesTable(HDD.getSize() / pageSize + 1, RAM.getSize() / pageSize + 1);

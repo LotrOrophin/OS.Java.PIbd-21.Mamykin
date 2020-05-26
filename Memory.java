@@ -2,14 +2,14 @@ public class Memory {
 	private int size;
 	private Page[] pages;
 
-	public Memory(int size, int pageSize, boolean isClear) {
+	public Memory(int size, boolean isClear) {
 		this.size = size;
 
-		int pagesCount = size / pageSize + 1;
+		int pagesCount = size / 10 + 1;
 		pages = new Page[pagesCount];
 		for (int i = 0; i < pagesCount; i++) {
 			int pageNumber = isClear? -1 : i;
-			pages[i] = new Page(pageNumber, pageSize);
+			pages[i] = new Page(pageNumber);
 		}
 	}
 
