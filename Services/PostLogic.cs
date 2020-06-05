@@ -8,24 +8,35 @@ using System.Text;
 
 namespace LabSUBD.Services
 {
-    public class PostLogic : ILogic<Post>
+    public class PostLogic
     {
         private static OfficeDataBase db = Program.db;
 
-        public void Create(Post model)
+        public void Create(string PostName, int Salary)
         {
-            var post = db.Posts.FirstOrDefault(c => c.PostName == model.PostName);
+            Post postModel = new Post()
+            {
+                PostName = PostName,
+                Salary = Salary
+            };
+            var post = db.Posts.FirstOrDefault(c => c.PostName == postModel.PostName);
             if (post != null)
             {
                 throw new Exception("Такая должность уже есть");
             }
-            db.Posts.Add(model);
+            db.Posts.Add(postModel);
             db.SaveChanges();
         }
 
-        public void Delete(Post model)
+        public void Delete(int Id, string PostName, int Salary)
         {
-            var post = db.Posts.FirstOrDefault(c => c.PostName == model.PostName);
+            Post postModel = new Post()
+            {
+                Id = Id,
+                PostName = PostName,
+                Salary = Salary
+            };
+            var post = db.Posts.FirstOrDefault(c => c.PostName == postModel.PostName);
             if (post == null)
             {
                 throw new Exception("Такой должности нет");
@@ -34,54 +45,47 @@ namespace LabSUBD.Services
             db.SaveChanges();
         }
 
-        public void Update(Post model)
+        public void Update(int Id, string PostName, int Salary)
         {
-            var post = db.Posts.FirstOrDefault(c => c.PostName == model.PostName);
+            Post postModel = new Post()
+            {
+                Id = Id,
+                PostName = PostName,
+                Salary = Salary
+            };
+            var post = db.Posts.FirstOrDefault(c => c.PostName == postModel.PostName);
             if (post == null)
             {
                 throw new Exception("Такой должности нет");
             }
-            post.PostName = model.PostName;
+            post.PostName = postModel.PostName;
             db.SaveChanges();
         }
 
-        public List<Post> Read()
+        public void Read()
         {
-            return db.Posts.ToList();
+            foreach (var p in db.Posts.ToList())
+            {
+                Console.WriteLine(p.PostName + ".  Зарплата:  " + p.Salary);
+            }
+        }
+        public void ReadPage(int StringToSkip, int StringToOutput)
+        {
+            var posts = from p in db.Posts.Skip(StringToSkip).Take(StringToOutput)
+                     select new
+                     {
+                         p.PostName,
+                         p.Salary
+                     };
+            foreach (var p in posts)
+            {
+                Console.WriteLine(p.PostName + " Зарплата:" + p.Salary);
+            }
         }
 
         public Post Get(int Id)
         {
             return db.Posts.FirstOrDefault(c => c.Id == Id);
-        }
-        public void Req1()
-        {
-            var note = db.EmployeeInformations
-                .Join(db.Posts,
-                c => c.PostId,
-                s => s.Id,
-                (c, s) => new
-                {
-                    s.PostName,
-                    s.Salary,
-                    c.FIO
-                });
-            foreach (var c in note)
-            {
-                Console.WriteLine(c.PostName + " " + c.Salary + " " + c.FIO);
-            }
-        }       
-        public void Req2()
-        {
-            var user = from u in db.Departaments
-                       join un in db.EmployeeInformations on u.Id equals un.DepartamentId
-                       join n in db.Specialties on un.SpecialtyId equals n.Id
-                       orderby u.DepartamentName
-                       select new { u.DepartamentName, un.FIO, n.SpecialtyName };
-            foreach (var c in user)
-            {
-                Console.WriteLine(c.DepartamentName + " " + c.FIO + " "+c.SpecialtyName);
-            }
         }
     }
 }

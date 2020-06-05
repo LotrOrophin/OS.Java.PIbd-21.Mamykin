@@ -7,24 +7,39 @@ using System.Text;
 
 namespace LabSUBD.Services
 {
-    public class DepartamentLogic: ILogic<Departament>
+    public class DepartamentLogic
     {
         private static OfficeDataBase db = Program.db;
 
-        public void Create(Departament model)
+        public void Create(string DepartamentName, int Building, int PhoneNumber, string Boss)
         {
-            var user = db.Departaments.FirstOrDefault(c => c.Id == model.Id);
-            if (user != null)
+            Departament departamentModel = new Departament()
+            {
+                DepartamentName = DepartamentName,
+                Building = Building,
+                PhoneNumber = PhoneNumber,
+                Boss = Boss
+            };
+            var departament = db.Departaments.FirstOrDefault(c => c.Id == departamentModel.Id);
+            if (departament != null)
             {
                 throw new Exception("Такой отдел уже есть");
             }
-            db.Departaments.Add(model);
+            db.Departaments.Add(departamentModel);
             db.SaveChanges();
         }
 
-        public void Delete(Departament model)
+        public void Delete(int id, string DepartamentName, int Building, int PhoneNumber, string Boss)
         {
-            var user = db.Departaments.FirstOrDefault(c => c.Id == model.Id);
+            Departament departament = new Departament()
+            {
+                Id = id,
+                DepartamentName = DepartamentName,
+                Building = Building,
+                PhoneNumber = PhoneNumber,
+                Boss = Boss
+            };
+            var user = db.Departaments.FirstOrDefault(c => c.Id == departament.Id);
             if (user == null)
             {
                 throw new Exception("Такого отдела нет");
@@ -32,23 +47,49 @@ namespace LabSUBD.Services
             db.Departaments.Remove(user);
             db.SaveChanges();
         }
-
-        public void Update(Departament model)
+        public void Update(int Id, string DepartamentName, int Building, int PhoneNumber, string Boss)
         {
-            var user = db.Departaments.FirstOrDefault(c => c.Id == model.Id);
+            var list = Get(Id);
+            Departament departament = new Departament()
+            {
+                Id = list.Id,
+                DepartamentName = DepartamentName,
+                Building = Building,
+                PhoneNumber = PhoneNumber,
+                Boss = Boss
+            };
+            var user = db.Departaments.FirstOrDefault(c => c.Id == departament.Id);
             if (user == null)
             {
                 throw new Exception("Такого отдела нет");
             }
-            user.DepartamentName = model.DepartamentName;
+            user.DepartamentName = departament.DepartamentName;
             db.SaveChanges();
         }
-        public List<Departament> Read()
+        public void Read()
         {
-            return db.Departaments.ToList();
+            foreach (var p in db.Departaments.ToList())
+            {
+                Console.WriteLine(p.DepartamentName + ". Босс: " + p.Boss);
+            }
+        }
+        public void ReadPage(int StringToSkip, int StringToOutput)
+        {
+            var ei = from d in db.Departaments.Skip(StringToSkip).Take(StringToOutput)
+                     select new
+                     {
+                         d.DepartamentName,
+                         d.Boss,
+                         d.Building,
+                         d.PhoneNumber
+                     };
+            foreach (var p in ei)
+            {
+                Console.WriteLine(p.DepartamentName + " Начальник: " + p.Boss + " Корпус: " + p.Building + " Телефон: " + p.PhoneNumber);
+            }
         }
 
-        public Departament Get(int Id)
+            public Departament Get(int Id)
         {
             return db.Departaments.FirstOrDefault(c => c.Id == Id);
         }        

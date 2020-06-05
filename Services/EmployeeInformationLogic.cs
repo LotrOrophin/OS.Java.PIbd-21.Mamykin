@@ -7,46 +7,107 @@ using System.Text;
 
 namespace LabSUBD.Services
 {
-    public class EmployeeInformationLogic : ILogic<EmployeeInformation>
+    public class EmployeeInformationLogic
     {
         private static OfficeDataBase db = Program.db;
 
-        public void Create(EmployeeInformation model)
+        public void Create(string FIO, DateTime date, string Registration, string birthPlace, string citizenship, string maritalStatus, int professionalExpirience, int premiumBonus, int phoneNumber, int departamentId, int postId, int specialtyId)
         {
-            var news = db.EmployeeInformations.FirstOrDefault(c => c.FIO == model.FIO);
-            if (news != null)
+            EmployeeInformation eiModel = new EmployeeInformation()
+            {
+                FIO = FIO,
+                Date = date,
+                Registration = Registration,
+                BirthPlace = birthPlace,
+                Citizenship = citizenship,
+                MaritalStatus = maritalStatus,
+                ProfessionalExpirience = professionalExpirience,
+                PremiumBonus = premiumBonus,
+                PhoneNumber = phoneNumber,
+                DepartamentId = departamentId,
+                SpecialtyId = specialtyId,
+                PostId = postId
+            };
+            var ei = db.EmployeeInformations.FirstOrDefault(c => c.FIO == eiModel.FIO);
+            if (ei != null)
             {
                 throw new Exception("Такое работник уже есть");
             }
-            db.EmployeeInformations.Add(model);
+            db.EmployeeInformations.Add(eiModel);
             db.SaveChanges();
         }
 
-        public void Update(EmployeeInformation model)
+        public void Update(int Id, string FIO, DateTime date, string Registration, string birthPlace, string citizenship, string maritalStatus, int professionalExpirience, int premiumBonus, int phoneNumber)
         {
-            var news = db.EmployeeInformations.FirstOrDefault(c => c.Id == model.Id);
-            if (news == null)
+            EmployeeInformation eiModel = new EmployeeInformation()
+            {
+                Id = Id,
+                FIO = FIO,
+                Date = date,
+                Registration = Registration,
+                BirthPlace = birthPlace,
+                Citizenship = citizenship,
+                MaritalStatus = maritalStatus,
+                ProfessionalExpirience = professionalExpirience,
+                PremiumBonus = premiumBonus,
+                PhoneNumber = phoneNumber
+            };
+            var ei = db.EmployeeInformations.FirstOrDefault(c => c.Id == eiModel.Id);
+            if (ei == null)
             {
                 throw new Exception("Такго работника  нет");
             }
-            news.FIO = model.FIO;
+            ei.FIO = eiModel.FIO;
             db.SaveChanges();
         }
 
-        public void Delete(EmployeeInformation model)
+        public void Delete(int Id, string FIO, DateTime date, string Registration, string birthPlace, string citizenship, string maritalStatus, int professionalExpirience, int premiumBonus, int phoneNumber)
         {
-            var news = db.EmployeeInformations.FirstOrDefault(c => c.Id == model.Id);
-            if (news == null)
+            EmployeeInformation eiModel = new EmployeeInformation()
+            {
+                Id = Id,
+                FIO = FIO,
+                Date = date,
+                Registration = Registration,
+                BirthPlace = birthPlace,
+                Citizenship = citizenship,
+                MaritalStatus = maritalStatus,
+                ProfessionalExpirience = professionalExpirience,
+                PremiumBonus = premiumBonus,
+                PhoneNumber = phoneNumber
+            };
+            var ei = db.EmployeeInformations.FirstOrDefault(c => c.Id == eiModel.Id);
+            if (ei == null)
             {
                 throw new Exception("Такого работника нет");
             }
-            db.EmployeeInformations.Remove(news);
+            db.EmployeeInformations.Remove(ei);
             db.SaveChanges();
         }
 
-        public List<EmployeeInformation> Read()
+        public void Read()
         {
-            return db.EmployeeInformations.ToList();
+            var list = db.EmployeeInformations.ToList();
+            foreach (var p in list)
+            {
+                Console.WriteLine(p.Id + " " + p.FIO + " " + p.Date + " " + p.ProfessionalExpirience + " Телефон: " + p.PhoneNumber + " " + p.MaritalStatus);
+            }
+        }
+
+        public void ReadPage(int StringToSkip, int StringToOutput)
+        {
+            var ei = from employeeI in db.EmployeeInformations.Skip(StringToSkip).Take(StringToOutput)
+                     select new
+                     {
+                         employeeI.FIO,
+                         employeeI.Id,
+                         employeeI.PhoneNumber,
+                         employeeI.MaritalStatus
+                     };
+            foreach (var p in ei)
+            {
+                Console.WriteLine(p.Id + " " + p.FIO + " " + " Телефон: " + p.PhoneNumber + " " + p.MaritalStatus);
+            }
         }
 
         public EmployeeInformation Get(int Id)

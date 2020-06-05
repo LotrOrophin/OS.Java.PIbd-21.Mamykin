@@ -8,46 +8,75 @@ using System.Text;
 
 namespace LabSUBD.Services
 {
-    public class SpecialtyLogic : ILogic<Specialty>
+    public class SpecialtyLogic
     {
         private static OfficeDataBase db = Program.db;
 
-        public void Create(Specialty model)
+        public void Create(string specialtyName)
         {
-            var userEvent = db.Specialties.FirstOrDefault(c => c.SpecialtyName == model.SpecialtyName);
-            if (userEvent != null)
+            Specialty specialtyModel= new Specialty()
+            {
+                SpecialtyName = specialtyName,
+            };
+            var specialty = db.Specialties.FirstOrDefault(c => c.SpecialtyName == specialtyModel.SpecialtyName);
+            if (specialty != null)
             {
                 throw new Exception("Такая специальность уже существует");
             }
-            db.Specialties.Add(model);
+            db.Specialties.Add(specialtyModel);
             db.SaveChanges();
         }
 
-        public void Delete(Specialty model)
+        public void Delete(int Id, string specialtyName)
         {
-            var userEvent = db.Specialties.FirstOrDefault(c => c.SpecialtyName == model.SpecialtyName);
-            if (userEvent == null)
+            Specialty specialtyModel = new Specialty()
+            {
+                Id = Id,
+                SpecialtyName = specialtyName,
+            };
+            var specialty = db.Specialties.FirstOrDefault(c => c.SpecialtyName == specialtyModel.SpecialtyName);
+            if (specialty == null)
             {
                 throw new Exception("Такой специальности нет");
             }
-            db.Specialties.Remove(userEvent);
+            db.Specialties.Remove(specialty);
             db.SaveChanges();
         }
 
-        public void Update(Specialty model)
+        public void Updateint (int Id, string specialtyName)
         {
-            var userEvent = db.Specialties.FirstOrDefault(c => c.SpecialtyName == model.SpecialtyName);
-            if (userEvent == null)
+            Specialty specialtyModel = new Specialty()
+            {
+                Id = Id,
+                SpecialtyName = specialtyName,
+            };
+            var specialty = db.Specialties.FirstOrDefault(c => c.SpecialtyName == specialtyModel.SpecialtyName);
+            if (specialty == null)
             {
                 throw new Exception("Такой специальности нет");
             }
-            userEvent.SpecialtyName = model.SpecialtyName;
+            specialty.SpecialtyName = specialtyModel.SpecialtyName;
             db.SaveChanges();
         }
 
-        public List<Specialty> Read()
+        public static void Read()
         {
-            return db.Specialties.ToList();
+            foreach (var p in db.Specialties.ToList())
+            {
+                Console.WriteLine("Специальность:  " + p.SpecialtyName);
+            }
+        }
+        public void ReadPage(int StringToSkip, int StringToOutput)
+        {
+            var specialty = from s in db.Specialties.Skip(StringToSkip).Take(StringToOutput)
+                     select new
+                     {
+                         s.SpecialtyName,
+                     };
+            foreach (var p in specialty)
+            {
+                Console.WriteLine(p.SpecialtyName);
+            }
         }
 
         public Specialty Get(int Id)

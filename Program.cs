@@ -12,16 +12,18 @@ namespace LabSUBD
         public static readonly OfficeDataBase db = new OfficeDataBase();
         static void Main(string[] args)
         {
-            MainLogic logic = new MainLogic(new DepartamentLogic(),new PostLogic(), new EmployeeInformationLogic(), new SpecialtyLogic());
+            MainLogic logic = new MainLogic();
+            EmployeeInformationLogic eiLogic = new EmployeeInformationLogic();
+            PostLogic postLogic = new PostLogic();
+            SpecialtyLogic specialtyLogic = new SpecialtyLogic();
+            DepartamentLogic departamentLogic = new DepartamentLogic();
             Insert(logic);
             Stopwatch clock = new Stopwatch();
             clock.Start();
-            Console.WriteLine("\n"+"\n");
-            logic.ReadEI();
-            //logic.ReadSpecialty();
-            //logic.ReadPost();
-            //logic.ReadDepartament();
-            logic.Post();
+            eiLogic.Read();
+            logic.Req1();
+            Console.WriteLine("\n");
+            logic.Req2();
             clock.Stop();
             Console.WriteLine(clock.ElapsedMilliseconds);
         }
