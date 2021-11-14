@@ -1,8 +1,0 @@
-FROM Debian
-RUN dnf update
-RUN dnf install postgresql
-USER postgres
-RUN systemctl start postgresql
-COPY example-jpa/build/libs/example-jpa-0.1.0-SNAPSHOT.jar /home/vladimiru
-RUN dnf install openjdk-11-jre
-CMD java -jar root/example-jpa-0.1.0-SNAPSHOT.jar
